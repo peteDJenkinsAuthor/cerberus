@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Security and data handling - Cerberus</title><meta name="description" content="How Cerberus encrypts and stores your data.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="stylesheet" href="style.css"></head>
+<body><header><a class="brand" href="index.html"><svg class="logo" viewBox="20 20 68 68" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cerberus logo"><defs><linearGradient id="g" x1="33" y1="28" x2="75" y2="83" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#DC143C"/><stop offset="1" stop-color="#800000"/></linearGradient></defs><path d="M54 28 L75 36 L75 54 C75 68 66 77 54 83 C42 77 33 68 33 54 L33 36 Z" fill="none" stroke="url(#g)" stroke-width="4.5" stroke-linejoin="round"/><path d="M61.5 47.5 A10.5 10.5 0 1 0 61.5 62.5" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg><span>Cerberus</span></a><nav><a href="index.html">Home</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="security.html">Security</a><a href="support.html">Support</a></nav></header>
+<main><h1>Security and data handling</h1>
+<p>Cerberus is a closed-source, local-only password manager. You cannot read the code, so this page explains in plain terms what the app does with your data, what you can check for yourself, and where its limits are. It is a description, not a promise that nothing can go wrong.</p>
+<h2>The short version</h2>
+<ul>
+<li>Your vault is encrypted with AES-256-GCM and stored only on your phone.</li>
+<li>The app has no internet permission, so Android itself stops it from sending data off the device.</li>
+<li>Master passwords are stretched with Argon2id, so guessing them offline is slow.</li>
+<li>Nobody, including me, can recover your vault if you lose every way in.</li>
+<li>The app has not been independently audited yet. The last section says what I plan to do about that.</li>
+</ul>
+<h2>How the vault is encrypted</h2>
+<p><strong>The cipher.</strong> Vault contents are encrypted with AES-256-GCM using a random 256-bit vault key. A fresh random value is used for every encryption, and GCM detects tampering.</p>
+<p><strong>Turning passwords into keys.</strong> Master passwords go through Argon2id (64 MiB of memory, 3 passes, 2 lanes, 32-byte output). It is deliberately slow and memory-hungry, which makes large-scale guessing expensive. It cannot rescue a weak password, so use a long one.</p>
+<p><strong>Several ways in, none stored in the clear.</strong> The vault key is never stored as-is. It is stored locked once for each approved combination of ways in, such as two master passwords, a master password with your fingerprint, or a master password with your recovery phrase. Each lock is derived only from the factors in that combination, so a wrong combination opens nothing.</p>
+<p><strong>Your PIN.</strong> The 6 to 8 digit PIN is mixed with a key held in the Android Keystore that cannot leave the phone. A copy of the vault files taken off your phone therefore cannot be attacked through the PIN. Five wrong PIN attempts destroy that Keystore key, which ends the PIN for good. You then use your master passwords or recovery phrase.</p>
+<p><strong>Fingerprint.</strong> Only Android's strong biometrics are accepted, bound to a hardware-backed key. Cerberus never sees your fingerprint; it only receives a yes or no from Android.</p>
+<p><strong>Recovery.</strong> A 20-word recovery phrase and a recovery image give you routes back in if you forget a password. Anyone who holds them can use them, so keep them offline and apart from your phone.</p>
+<h2>Where your data lives and what the app can reach</h2>
+<ul>
+<li>The vault is a file in the app's private storage. Android's own cloud backup of the app is turned off.</li>
+<li>Photo attachments (for example the front and back of a licence) are shrunk, stripped of location data and encrypted with a separate key. They are not included in backups or sync.</li>
+<li>The app requests only two permissions: biometric authentication, and NFC for the optional security-key mode. It has no internet, contacts, location, storage, camera or microphone permission.</li>
+<li>Screenshots and screen recording are blocked unless you allow them in Settings. Copied passwords are flagged sensitive and cleared from the clipboard after the delay you choose.</li>
+</ul>
+<h2>Backups and sync</h2>
+<ul>
+<li><strong>Encrypted backups</strong> (.cerb files) use a password you choose (10 characters or more), Argon2id and AES-256-GCM. Anyone who holds the file can try to guess that password offline, so choose a long one.</li>
+<li><strong>Personal sync</strong> (Pro) writes one encrypted file per device into a folder you choose and merges the files from your other devices. The app itself makes no network connection. Whatever keeps that folder in step, such as Syncthing or Nextcloud, is a separate app and is the one that touches the network.</li>
+</ul>
+<h2>Autofill, passkeys and security-key mode</h2>
+<ul>
+<li><strong>Autofill</strong> only offers your data after you unlock Cerberus. It matches logins by the website or app saved on the item. Android decides where suggestions can appear, so a malicious app can still read what you let it fill; fill only into apps you trust.</li>
+<li><strong>Passkeys</strong> (Android 14 or newer) are stored as items in your encrypted vault. Cerberus checks the requesting app by its signing certificate. Passkey support is new, so keep another way into important accounts.</li>
+<li><strong>Security-key mode</strong> (Pro, beta) lets your phone act as a FIDO2 key over NFC. It answers only while you have armed it on screen with the vault unlocked, for 60 seconds and a single use. It has not been tested against every reader.</li>
+</ul>
+<h2>Hidden vaults (Pro)</h2>
+<p>Pro adds extra vaults, each opened by its own PIN. They protect against someone picking up your phone and using the app. They do not hide that Cerberus is installed, and a skilled examiner with full access to an unlocked or rooted phone may still find signs of it. Some options destroy data the moment a code is entered, and that cannot be undone. Test with throwaway data first.</p>
+<h2>What Cerberus cannot protect against</h2>
+<ul>
+<li>A phone that is rooted or infected with malware.</li>
+<li>Someone watching you type your master password, or a keylogger on the phone.</li>
+<li>A weak or reused master password.</li>
+<li>A recovery phrase or image kept where other people can find it.</li>
+<li>Being forced to unlock the app.</li>
+<li>While the vault is unlocked, your data sits in the phone's memory in ordinary form, as it does in every app that shows you your data. Locking the app clears it as far as Android allows, but no app can guarantee that memory is wiped.</li>
+</ul>
+<h2>What you can check yourself</h2>
+<p>You do not need the source code to verify the biggest claims.</p>
+<ol>
+<li><strong>No internet access.</strong> In Android Settings, open Apps, then Cerberus, then Permissions. The internet permission is not listed because the app never requested it. Without it Android blocks the app's network access. A permission-scanning app such as Exodus Privacy will show the same.</li>
+<li><strong>Is this the genuine build?</strong> Builds installed outside the Play Store are signed with a key whose SHA-256 fingerprint is:</li>
+</ol>
+<p><code>E3:4F:41:A9:D6:16:6B:8A:74:F6:52:CE:72:BF:6E:96:DB:FC:00:CB:0A:63:B4:8F:B5:0F:94:70:A8:75:5E:F3</code></p>
+<p>You can compare it using <code>apksigner verify --print-certs</code> on the APK. Play Store builds are signed by Google's Play App Signing instead, so they will show a different fingerprint.
+3. <strong>Your own backup test.</strong> Make an encrypted backup, restore it on a spare phone, and confirm it works before you rely on it.</p>
+<h2>Where things stand, and what I plan to do</h2>
+<p>I want to be straight about the gaps:</p>
+<ul>
+<li>The code is closed and has not had an independent security audit.</li>
+<li>It is built and maintained by one person.</li>
+<li>Passkeys, security-key mode and the newest autofill features are young and have not been proven against every website and device.</li>
+</ul>
+<p>What I will do about it, in order: keep this page accurate whenever the app changes; publish release notes that say what changed in security-relevant code; commission an independent audit once Pro revenue can pay for one and publish the summary, including anything it finds; and act on reports quickly.</p>
+<h2>Reporting a problem</h2>
+<p>Email ghosted.technologies@proton.me with the app version (Settings, About), what you did and what happened. Please do not publish details until a fix is available. I will credit you if you wish.</p>
+<p><em>Last updated: November 2026.</em></p></main>
+<footer>&copy; 2026 ghosted.technologies &middot; <a href="privacy.html">Privacy Policy</a> &middot; <a href="terms.html">Terms of Use</a> &middot; <a href="mailto:ghosted.technologies@proton.me">ghosted.technologies@proton.me</a></footer>
+</body></html>
