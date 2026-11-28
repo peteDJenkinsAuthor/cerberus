@@ -1,6 +1,6 @@
 # Cerberus website
 
-Static site, no build step. Pages: index, privacy, terms, security, support. Assets: style.css, dog.svg (hero), bg.svg (fixed background), fonts/ (Orbitron and Manrope, SIL OFL).
+Static site, no build step. Pages: index, features, downloads, privacy, terms, security, support. Downloads links to the Cerberus_beta GitHub releases; fill in the SHA-256 and signing fingerprint on downloads.html after the first beta build. Assets: style.css, dog.svg (hero), bg.svg (fixed background), fonts/ (Orbitron and Manrope, SIL OFL).
 
 ## Publish on GitHub Pages
 1. Create a NEW PUBLIC repo named `cerberus` (keep the app source repo private).

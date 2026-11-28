@@ -49,3 +49,12 @@ footer a{color:var(--mut)}
 .sub{font:400 clamp(.9rem,3.2vw,1.35rem) Orbitron,sans-serif;letter-spacing:.32em;margin:.4em 0 1em;text-transform:uppercase;color:#fff}
 @media (max-aspect-ratio:4/5){.hero{min-height:74vh;min-height:74svh}}
 @media (max-width:560px){header a.brand span{display:none}nav a{padding:6px 7px;font-size:.84rem}}
+
+.pill{display:inline-block;font:600 .62rem Orbitron,sans-serif;letter-spacing:.08em;padding:2px 7px;border-radius:99px;background:rgba(220,20,60,.2);border:1px solid var(--line);color:#fff;vertical-align:middle;margin-left:4px}
+.btn{display:inline-block;padding:10px 18px;border-radius:10px;background:linear-gradient(180deg,#e0364a,#8a0f20);color:#fff;text-decoration:none;font:600 .85rem Orbitron,sans-serif;letter-spacing:.06em}
+.btn.ghost{background:transparent;border:1px solid var(--line)}
+.block.warn{border-color:#e0a030;box-shadow:0 8px 28px rgba(224,160,48,.18)}
+.block.warn h1{color:#ffc15a}
+h2.gh{margin:1.6em 0 0;text-align:center}
+nav{flex-wrap:wrap;justify-content:flex-end}
+@media (max-width:560px){nav a{padding:5px 6px;font-size:.78rem}}
