@@ -58,3 +58,15 @@ footer a{color:var(--mut)}
 h2.gh{margin:1.6em 0 0;text-align:center}
 nav{flex-wrap:wrap;justify-content:flex-end}
 @media (max-width:560px){nav a{padding:5px 6px;font-size:.78rem}}
+
+nav a.dl{color:#fff;background:linear-gradient(180deg,#e0364a,#8a0f20);font-weight:700}
+nav a.dl:hover{background:linear-gradient(180deg,#f0485c,#a01428)}
+nav{align-items:center}
+details.dd{position:relative}
+details.dd summary{list-style:none;cursor:pointer;color:var(--mut);font-size:.92rem;padding:6px 10px;border-radius:8px;user-select:none}
+details.dd summary::-webkit-details-marker{display:none}
+details.dd summary::after{content:" \25BE"}
+details.dd summary:hover,details.dd[open] summary{color:#fff;background:rgba(220,20,60,.18)}
+details.dd .menu{position:absolute;right:0;top:calc(100% + 6px);min-width:150px;display:flex;flex-direction:column;background:rgba(10,10,11,.96);border:1px solid var(--line);border-radius:10px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.5);z-index:60}
+details.dd .menu a{white-space:nowrap}
+@media (max-width:560px){details.dd summary{padding:5px 6px;font-size:.78rem}}
