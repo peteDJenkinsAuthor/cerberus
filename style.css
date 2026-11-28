@@ -59,8 +59,8 @@ h2.gh{margin:1.6em 0 0;text-align:center}
 nav{flex-wrap:wrap;justify-content:flex-end}
 @media (max-width:560px){nav a{padding:5px 6px;font-size:.78rem}}
 
-nav a.dl{color:#fff;background:linear-gradient(180deg,#e0364a,#8a0f20);font-weight:700}
-nav a.dl:hover{background:linear-gradient(180deg,#f0485c,#a01428)}
+nav a.dl{color:#DC143C;font-weight:700}
+nav a.dl:hover{color:#ff3b5c;background:rgba(220,20,60,.18)}
 nav{align-items:center}
 details.dd{position:relative}
 details.dd summary{list-style:none;cursor:pointer;color:var(--mut);font-size:.92rem;padding:6px 10px;border-radius:8px;user-select:none}
